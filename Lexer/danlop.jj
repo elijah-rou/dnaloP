@@ -1,0 +1,195 @@
+options
+{
+	IGNORE_CASE = true;
+}
+
+
+
+PARSER_BEGIN(danlop)
+import java.util.*;
+import java.io.*;
+/** Reverse polish notation lexer */
+public class danlop
+{
+	public static void main(String[] args) throws ParseException
+	{
+	danlop parser;
+
+      if(args.length == 0){
+        System.out.println ("danlop: Reading input ...");
+        parser = new danlop(System.in);
+      }
+      else if(args.length == 1){
+        System.out.println ("danlop: Reading the file " + args[0] + " ..." );
+        try {
+          parser = new danlop(new java.io.FileInputStream(args[0]));
+        }
+        catch(java.io.FileNotFoundException e) {
+          System.out.println ("danlop: The file " + args[0] + " was not found.");
+          return;
+        }
+      }
+      else {
+        System.out.println ("danlop:  You must use one of the following:");
+        System.out.println ("         java danlop < file");
+        System.out.println ("Or");
+        System.out.println ("         java danlop file");
+        return ;
+      }
+      try 
+      {
+        parser.Test();
+        System.out.println ("danlop: The input was read sucessfully.");
+      }
+      catch(ParseException e){
+        System.out.println ("danlop: There was an error during the parse.");
+        System.out.println (e.getMessage());
+      }
+      catch(TokenMgrError e){
+        System.out.println ("danlop: There was an error.");
+        System.out.println (e.getMessage());
+      }
+    }
+	}
+
+
+PARSER_END(danlop)
+
+/**Ignore these while generating tokens*/
+SKIP:
+{
+	" "
+|	"\t"
+|	"\n"
+|	"\r"
+|	< "//"((~["\n","\r","\t"])*"\n") > //in code comments
+}
+
+/**Regular Expresions*/
+TOKEN:
+{
+	< #DIGIT: ["0"-"9"] > //helper token for regex of floats, integers and IDs
+|	< INTEGER: (<DIGIT>)+ > //integer
+|	< FLOAT: (<INTEGER>)+"."(<INTEGER>)+> //floating point number
+|	< IF : "if" >	//if statement		
+|	< WHILE : "while" >	//while loop
+|	< OPEN_CURLY: "{" >
+|	< CLOSE_CURLY: "}">
+|	< SEMICOLON: ";" >
+|	< OPEN_PAREN: "(" >
+|	< CLOSE_PAREN: ")" >
+|	< BOOLEAN:  ("true"|"false") > //booleans	
+|	< IDENTIFIER: ["a"-"z"](["a"-"z"]|["A"-"Z"]|(<DIGIT>))* >	//indentifiers
+|	< STRING: "\""(~["\n","\r","\t"])*"\"" >	//any sequence of chars except whitespace enclosed in quotes
+|	< #OBJECT: ((<IDENTIFIER>)|(<INTEGER>)|(<FLOAT>)|(<STRING>)) >  //helper token for regex of lists
+|	< LIST : ("[]")|("["((<OBJECT>)((","(<OBJECT>))+))"]") > // lists of any of the types defined in our language 
+|	< OPERATOR : ("+"|"-"|"*"|"/"|"<"|"<="|">"|">="|"=="|"&"|"|"|"!") > //all arithmetic, comparitive and logical operators
+|	< ASSIGN : "=" > //assignment
+|	< ERROR : ~[] > //error token for anything not in our language
+
+}
+
+void Test():
+{ 
+	String s;
+
+}
+{
+	(
+		s=value()
+		{
+			try	
+			{
+				BufferedWriter writer = new BufferedWriter(new FileWriter("Output.txt",true));
+				writer.write(s);
+				writer.close();
+			}
+			catch(IOException e)
+			{}	
+		}
+	)*
+	<EOF> 
+}
+
+String value():
+{
+	Token t;
+}
+{
+	t=<INTEGER>
+	{
+		return "<LITERAL"+","+t.image+">"+"\n";
+	}
+|
+	t=<FLOAT>
+	{
+		return "<LITERAL"+","+t.image+">"+"\n";
+	}
+|
+	t=<STRING>
+	{
+		return "<LITERAL"+","+t.image+">"+"\n";
+	}
+|
+	t=<IDENTIFIER>
+	{
+		return "<LITERAL"+","+t.image+">"+"\n";
+	}
+|
+	t=<LIST>
+	{
+		return "<LITERAL"+","+t.image+">"+"\n";
+	}
+|
+	t=<BOOLEAN>
+	{
+		return "<LITERAL"+","+t.image+">"+"\n";
+	}
+|
+	t=<IF>
+	{
+		return "<IF"+","+t.image+">"+"\n";
+	}
+|
+	t=<WHILE>
+	{
+		return "<WHILE"+","+t.image+">"+"\n";
+	}
+|
+	t=<OPEN_CURLY>
+	{
+		return "<OPEN_CURLY"+","+t.image+">"+"\n";
+	}
+|
+	t=<CLOSE_CURLY>
+	{
+		return "<CLOSE_CURLY"+","+t.image+">"+"\n";
+	}
+|
+	t=<SEMICOLON>
+	{
+		return "<SEMICOLON"+","+t.image+">"+"\n";
+	}
+|
+	t=<OPEN_PAREN>
+	{
+		return "<OPEN_PAREN"+","+t.image+">"+"\n";
+	}
+|
+	t=<CLOSE_PAREN>
+	{
+		return "<CLOSE_PAREN"+","+t.image+">"+"\n";
+	}
+|
+	t=<OPERATOR>
+	{
+		return "<OPERATOR"+","+t.image+">"+"\n";
+	}
+|
+	t=<ASSIGN>
+	{
+		return "<ASSIGN"+","+t.image+">"+"\n";
+	}
+}
+
+

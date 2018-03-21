@@ -7,20 +7,14 @@ public class Parser {
 
     private int i;
     private Token[] input;
-    private NonTerminalNode parseTree;
 
     Parser(Token[] input){
         i = input.length - 1;
         this.input = input;
     }
 
-    void parse() {
-        parseTree = new NonTerminalNode(NonTerminal.S);
-        S(parseTree);
-    }
-
     NonTerminalNode getParseTree() {
-        return parseTree;
+        return S();
     }
 
     private void advance() {
@@ -29,7 +23,7 @@ public class Parser {
 
     private void consume(Token t, NonTerminalNode n) {
         if (input[i] == t) {
-            n.children.push(new TerminalNode(t));
+            n.addChild(new TerminalNode(t));
             if (i > 0)
                 advance();
         }
@@ -37,81 +31,83 @@ public class Parser {
             System.out.println("Error on token " + i);
     }
 
-    private void S(NonTerminalNode n) {
-        NonTerminalNode m = new NonTerminalNode(NonTerminal.Body1);
-        body1(m);
-        n.children.push(m);
-        consume(Token.BOF,n);
-    }
 
-    private void body1(NonTerminalNode n) {
+    private NonTerminalNode S() {
+        NonTerminalNode n = new NonTerminalNode(NonTerminal.S);
         switch (input[i]) {
             case CLOSE_CURLY:
-                consume(Token.CLOSE_CURLY,n);
-                NonTerminalNode m = new NonTerminalNode(NonTerminal.Body2);
-                body2(m);
-                n.children.push(m);
+                n.setProduction(1);
+                n.addChild(body1());
+                consume(Token.BOF,n);
                 break;
             default:
                 error();
         }
+
+        return n;
     }
 
-    private void body2(NonTerminalNode n) {
+    private NonTerminalNode body1() {
+        NonTerminalNode n = new NonTerminalNode(NonTerminal.Body1);
+        switch (input[i]) {
+            case CLOSE_CURLY:
+                n.setProduction(2);
+                consume(Token.CLOSE_CURLY,n);
+                n.addChild(body2());
+                break;
+            default:
+                error();
+        }
+        return n;
+    }
+
+    private NonTerminalNode body2() {
+        NonTerminalNode n = new NonTerminalNode(NonTerminal.Body2);
         switch (input[i]) {
             case SEMICOLON:
+                n.setProduction(3);
                 consume(Token.SEMICOLON,n);
-                NonTerminalNode m = new NonTerminalNode(NonTerminal.Statement);
-                statement(m);
-                n.children.push(m);
-                m = new NonTerminalNode(NonTerminal.Body2);
-                body2(m);
-                n.children.push(m);
+                n.addChild(statement());
+                n.addChild(body2());
                 break;
             case OPEN_CURLY:
+                n.setProduction(4);
                 consume(Token.OPEN_CURLY,n);
                 break;
             default:
                 error();
         }
-
+        return n;
     }
 
-    private void statement(NonTerminalNode n) {
+    private NonTerminalNode statement() {
+        NonTerminalNode n = new NonTerminalNode(NonTerminal.Statement);
         switch (input[i]) {
             case ASSIGN:
+                n.setProduction(5);
                 consume(Token.ASSIGN,n);
                 consume(Token.IDENTIFIER,n);
-                NonTerminalNode m = new NonTerminalNode(NonTerminal.Expr);
-                expr(m);
-                n.children.push(m);
+                n.addChild(expr());
                 break;
             case IF:
+                n.setProduction(6);
                 consume(Token.IF,n);
-                m = new NonTerminalNode(NonTerminal.Body1);
-                body1(m);
-                n.children.push(m);
-                m = new NonTerminalNode(NonTerminal.Body1);
-                body1(m);
-                n.children.push(m);
-                m = new NonTerminalNode(NonTerminal.Expr);
-                expr(m);
-                n.children.push(m);
+                n.addChild(body1());
+                n.addChild(body1());
+                n.addChild(expr());
                 break;
             case WHILE:
+                n.setProduction(7);
                 consume(Token.WHILE,n);
-                m = new NonTerminalNode(NonTerminal.Body1);
-                body1(m);
-                n.children.push(m);
-                m = new NonTerminalNode(NonTerminal.Expr);
-                expr(m);
-                n.children.push(m);
+                n.addChild(body1());
+                n.addChild(expr());
                 break;
             default:
                 error();
         }
+        return n;
     }
-
+/*
     private void expr1(NonTerminalNode n) {
         switch (input[i]) {
             case CLOSE_PAREN:
@@ -125,30 +121,28 @@ public class Parser {
                 error();
         }
     }
-
-    private void expr(NonTerminalNode n) {
+*/
+    private NonTerminalNode expr() {
+        NonTerminalNode n = new NonTerminalNode(NonTerminal.Expr);
         switch (input[i]) {
             case OPERATION:
+                n.setProduction(8);
                 consume(Token.OPERATION,n);
-                NonTerminalNode m = new NonTerminalNode(NonTerminal.Expr);
-                expr(m);
-                n.children.push(m);
-                m = new NonTerminalNode(NonTerminal.Expr);
-                expr(m);
-                n.children.push(m);
+                n.addChild(expr());
+                n.addChild(expr());
                 break;
             case IDENTIFIER:
+                n.setProduction(9);
                 consume(Token.IDENTIFIER,n);
                 break;
             case LITERAL:
+                n.setProduction(10);
                 consume(Token.LITERAL,n);
-                break;
-            case OPEN_PAREN:
-                consume(Token.OPEN_PAREN,n);
                 break;
             default:
                 error();
         }
+        return n;
     }
 
     private void error() {
@@ -181,7 +175,7 @@ interface ParseNode {
     String getName();
 }
 class TerminalNode implements ParseNode {
-    Token t;
+    final Token t;
     TerminalNode(Token t) {
         this.t = t;
     }
@@ -192,19 +186,30 @@ class TerminalNode implements ParseNode {
     }
 }
 class NonTerminalNode implements ParseNode {
-    NonTerminal nt;
+    final NonTerminal nt;
+    int production = -1;
+
+    private Stack<ParseNode> children = new Stack<>();
 
     @Override
     public String getName() {
         return nt.name();
     }
 
-    Stack<ParseNode> children = new Stack<>();
-
     NonTerminalNode(NonTerminal nt) {
         this.nt = nt;
     }
 
+    void addChild(ParseNode n) {
+        children.push(n);
+    }
 
+    Stack<ParseNode> getChildren() {
+        return children;
+    }
+
+    void setProduction(int production) {
+        this.production = production;
+    }
 
 }

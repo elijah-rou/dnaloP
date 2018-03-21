@@ -1,5 +1,6 @@
 import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
 import javax.swing.*;
@@ -37,20 +38,19 @@ public class ParserGUI extends JFrame {
     ParserGUI() {
         super("Parser");
         Parser parser = new Parser(sampleInputs[1]);
-        parser.parse();
         mxGraph g = generateGraph(parser.getParseTree());
         mxGraphComponent graphComponent = new mxGraphComponent(g);
         getContentPane().add(graphComponent);
     }
 
-    private void generateGraph(mxGraph g, Object vRoot, NonTerminalNode n) {
+    private void generateGraph(mxGraph g, Object vParent, NonTerminalNode n) {
 
         Object vChild;
         ParseNode child;
-        for (int j = n.children.size()-1; j>=0 ; j--) {
-            child = n.children.get(j);
+        for (int j = n.getChildren().size()-1; j>=0 ; j--) {
+            child = n.getChildren().get(j);
             vChild = g.insertVertex(g.getDefaultParent(), null, child.getName(),0,0,30,30);
-            g.insertEdge(g.getDefaultParent(), null,"", vRoot,vChild);
+            g.insertEdge(g.getDefaultParent(), null,Integer.toString(n.production),vParent ,vChild);
             if (child instanceof NonTerminalNode) {
                 generateGraph(g, vChild, (NonTerminalNode) child);
             }
@@ -60,6 +60,8 @@ public class ParserGUI extends JFrame {
 
     private mxGraph generateGraph(NonTerminalNode n) {
         mxGraph g = new mxGraph();
+        g.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_DASHED, true);
+        g.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_FONTCOLOR, "#ff0000");
         g.getModel().beginUpdate();
         try {
             Object vRoot = g.insertVertex(g.getDefaultParent(), null, n.nt.name(),0,0,30,30);

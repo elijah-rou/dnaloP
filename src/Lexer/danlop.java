@@ -5,7 +5,7 @@ import java.io.*;
 public class danlop implements danlopConstants {
         
   static final public void Test() throws ParseException {
-        String s;
+    String s;
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -31,14 +31,14 @@ public class danlop implements danlopConstants {
         break label_1;
       }
       s = value();
-                        try
-                        {
-                                BufferedWriter writer = new BufferedWriter(new FileWriter("Output.txt",true));
-                                writer.write(s);
-                                writer.close();
-                        }
-                        catch(IOException e)
-                        {}
+      try
+        {
+          BufferedWriter writer = new BufferedWriter(new FileWriter("Output.txt",true));
+          writer.write(s);
+          writer.close();
+        }
+      catch(IOException e)
+        {}
     }
     jj_consume_token(0);
   }

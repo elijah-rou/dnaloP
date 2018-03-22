@@ -1,7 +1,7 @@
 JC = javac
 J = java
 #SRC = $(wildcard ./src/*/*.java)
-SRC = $(wildcard ./*.java)
+SRC = $(wildcard ./src/Parser/*.java)
 LIB = $(wildcard lib/*.jar)
 DIR = $(LIB) $(SRC) 
 BIN = bin

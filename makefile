@@ -1,7 +1,7 @@
 JC = javac
 J = java
-#SRC = $(wildcard ./src/*/*.java)
-SRC = $(wildcard ./src/Parser/*.java)
+SRC = $(wildcard ./src/*/*.java)
+#SRC = $(wildcard ./src/Parser/*.java)
 LIB = $(wildcard lib/*.jar)
 DIR = $(LIB) $(SRC) 
 BIN = bin
@@ -13,7 +13,7 @@ default:
 
 Parser:
 	@make
-	$(J) -cp $(BIN):$(LIB) ParserGUI
+	$(J) -cp $(BIN):$(LIB) ParserGUI $(arg)
 
 clean:
 	rm bin/*.class

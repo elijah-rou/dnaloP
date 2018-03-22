@@ -28,7 +28,45 @@ public class ParserGUI extends JFrame {
             Terminal.CLOSE_CURLY
     }};
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException{
+        danlop parser;
+
+        if(args.length == 0){
+            System.out.println ("danlop: Reading input ...");
+            parser = new danlop(System.in);
+        }
+        else if(args.length == 1){
+            System.out.println ("danlop: Reading the file " + args[0] + " ..." );
+            try {
+            parser = new danlop(new java.io.FileInputStream(args[0]));
+            }
+            catch(java.io.FileNotFoundException e) {
+            System.out.println ("danlop: The file " + args[0] + " was not found.");
+            return;
+            }
+        }
+        else {
+        System.out.println ("danlop:  You must use one of the following:");
+        System.out.println ("         java danlop < file");
+        System.out.println ("Or");
+        System.out.println ("         java danlop file");
+        return ;
+        }
+        try
+        {
+            // Convert this method into tokens for parser
+            parser.Test();
+            System.out.println ("danlop: The input was read sucessfully.");
+        }
+        catch(ParseException e){
+            System.out.println ("danlop: There was an error during the parse.");
+            System.out.println (e.getMessage());
+        }
+        catch(TokenMgrError e){
+            System.out.println ("danlop: There was an error.");
+            System.out.println (e.getMessage());
+        }
+
         ParserGUI frame = new ParserGUI();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(400, 320);

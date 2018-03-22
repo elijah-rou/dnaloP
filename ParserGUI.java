@@ -9,23 +9,23 @@ import javax.swing.*;
  * Created by Neville Varney-Horwitz on 2018-03-20.
  */
 public class ParserGUI extends JFrame {
-    static Token[][] sampleInputs = new Token[][]{
+    static Terminal[][] sampleInputs = new Terminal[][]{
             {
-                    Token.BOF,
-                    Token.OPEN_CURLY,
-                    Token.LITERAL, Token.LITERAL, Token.OPERATION, Token.LITERAL, Token.OPERATION, Token.IDENTIFIER, Token.ASSIGN, Token.SEMICOLON,
-                    Token.CLOSE_CURLY
+                    Terminal.BOF,
+                    Terminal.OPEN_CURLY,
+                    Terminal.LITERAL, Terminal.LITERAL, Terminal.OPERATION, Terminal.LITERAL, Terminal.OPERATION, Terminal.IDENTIFIER, Terminal.ASSIGN, Terminal.SEMICOLON,
+                    Terminal.CLOSE_CURLY
             },{
-            Token.BOF, //beginning of file
-            Token.OPEN_CURLY,
-            Token.LITERAL, Token.IDENTIFIER, Token.ASSIGN, Token.SEMICOLON,
-            Token.IDENTIFIER, Token.LITERAL, Token.OPERATION,
-            Token.OPEN_CURLY,
-            Token.IDENTIFIER, Token.LITERAL, Token.OPERATION, Token.IDENTIFIER, Token.ASSIGN, Token.SEMICOLON,
-            Token.CLOSE_CURLY,
-            Token.OPEN_CURLY, Token.CLOSE_CURLY,
-            Token.IF, Token.SEMICOLON,
-            Token.CLOSE_CURLY
+            Terminal.BOF, //beginning of file
+            Terminal.OPEN_CURLY,
+            Terminal.LITERAL, Terminal.IDENTIFIER, Terminal.ASSIGN, Terminal.SEMICOLON,
+            Terminal.IDENTIFIER, Terminal.LITERAL, Terminal.OPERATION,
+            Terminal.OPEN_CURLY,
+            Terminal.IDENTIFIER, Terminal.LITERAL, Terminal.OPERATION, Terminal.IDENTIFIER, Terminal.ASSIGN, Terminal.SEMICOLON,
+            Terminal.CLOSE_CURLY,
+            Terminal.OPEN_CURLY, Terminal.CLOSE_CURLY,
+            Terminal.IF, Terminal.SEMICOLON,
+            Terminal.CLOSE_CURLY
     }};
 
     public static void main(String[] args) {

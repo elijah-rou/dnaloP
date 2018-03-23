@@ -5,10 +5,13 @@ import com.mxgraph.view.mxGraph;
 
 import javax.swing.*;
 
+import java.util.ArrayList;
+
 /**
  * Created by Neville Varney-Horwitz on 2018-03-20.
  */
 public class ParserGUI extends JFrame {
+    /*
     static Terminal[][] sampleInputs = new Terminal[][]{
        {
             Terminal.BOF,
@@ -36,10 +39,10 @@ public class ParserGUI extends JFrame {
             Terminal.CLOSE_CURLY
         }
     };
-
+    */
+    static ArrayList<TerminalPair> terminals = new ArrayList<TerminalPair>();
     public static void main(String[] args) throws ParseException{
         danlop parser;
-
         if(args.length == 0){
             System.out.println ("danlop: Reading input ...");
             parser = new danlop(System.in);
@@ -64,7 +67,7 @@ public class ParserGUI extends JFrame {
         try
         {
             // Convert this method into tokens for parser
-            parser.Test();
+            terminals = parser.Lex();
             System.out.println ("danlop: The input was read sucessfully.");
         }
         catch(ParseException e){
@@ -84,7 +87,7 @@ public class ParserGUI extends JFrame {
 
     ParserGUI() {
         super("Parser");
-        Parser parser = new Parser(sampleInputs[1]);
+        Parser parser = new Parser(terminals);
         mxGraph g = generateGraph(parser.getParseTree());
         mxGraphComponent graphComponent = new mxGraphComponent(g);
         getContentPane().add(graphComponent);

@@ -8,9 +8,11 @@ enum TerminalToken{
     WHILE,
     IDENTIFIER,
     LITERAL,
-    OPERATION,
+    OPERATOR,
     ERROR,
-    EOF
+    EOF,
+    OPEN_PAREN,
+    CLOSE_PAREN
 }
 
 public class TerminalPair {
@@ -19,5 +21,9 @@ public class TerminalPair {
     TerminalPair(TerminalToken token, String value){
         this.token = token;
         this.value = value;
+    }
+
+    public String toString(){
+        return "<"+this.token+", "+value+">"+value+">";
     }
 }

@@ -11,35 +11,7 @@ import java.util.ArrayList;
  * Created by Neville Varney-Horwitz on 2018-03-20.
  */
 public class ParserGUI extends JFrame {
-    /*
-    static Terminal[][] sampleInputs = new Terminal[][]{
-       {
-            Terminal.BOF,
-            Terminal.OPEN_CURLY,
-            Terminal.LITERAL, 
-            Terminal.LITERAL, 
-            Terminal.OPERATION, 
-            Terminal.LITERAL, 
-            Terminal.OPERATION, 
-            Terminal.IDENTIFIER, 
-            Terminal.ASSIGN, 
-            Terminal.SEMICOLON,
-            Terminal.CLOSE_CURLY
-        },
-        {
-            Terminal.BOF, //beginning of file
-            Terminal.OPEN_CURLY,
-            Terminal.LITERAL, Terminal.IDENTIFIER, Terminal.ASSIGN, Terminal.SEMICOLON,
-            Terminal.IDENTIFIER, Terminal.LITERAL, Terminal.OPERATION,
-            Terminal.OPEN_CURLY,
-            Terminal.IDENTIFIER, Terminal.LITERAL, Terminal.OPERATION, Terminal.IDENTIFIER, Terminal.ASSIGN, Terminal.SEMICOLON,
-            Terminal.CLOSE_CURLY,
-            Terminal.OPEN_CURLY, Terminal.CLOSE_CURLY,
-            Terminal.IF, Terminal.SEMICOLON,
-            Terminal.CLOSE_CURLY
-        }
-    };
-    */
+    
     static ArrayList<TerminalPair> terminals = new ArrayList<TerminalPair>();
     public static void main(String[] args) throws ParseException{
         danlop parser;

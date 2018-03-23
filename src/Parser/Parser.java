@@ -14,7 +14,6 @@ public class Parser {
     Parser(ArrayList<TerminalPair> input){
         this.input = input;
         i = input.size() - 1;
-
     }
 
     NonTerminalNode getParseTree() {
@@ -26,6 +25,7 @@ public class Parser {
     }
 
     private void consume(TerminalToken t, NonTerminalNode n) {
+        //System.out.println(i+ " - " +input.get(i).token + " | " + t); 
         if (input.get(i).token == t) {
             n.addChild(new TerminalNode(input.get(i)));
             if (i > 0)

@@ -56,7 +56,7 @@ public class danlop implements danlopConstants {
       return new TerminalPair(TerminalToken.LITERAL, t.image);
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-      return new TerminalPair(TerminalToken.LITERAL, t.image);
+      return new TerminalPair(TerminalToken.IDENTIFIER, t.image);
     case LIST:
       t = jj_consume_token(LIST);
       return new TerminalPair(TerminalToken.LITERAL, t.image);

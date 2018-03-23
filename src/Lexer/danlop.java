@@ -8,6 +8,7 @@ public class danlop implements danlopConstants {
   static final public ArrayList<TerminalPair> Lex() throws ParseException {
     ArrayList<TerminalPair> terminals = new ArrayList<TerminalPair>();
     TerminalPair s;
+    terminals.add(new TerminalPair(TerminalToken.BOF, ""));
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -36,6 +37,8 @@ public class danlop implements danlopConstants {
       terminals.add(s);
     }
     jj_consume_token(0);
+    terminals.add(new TerminalPair(TerminalToken.EOF, ""));
+
     return terminals;
   }
 
@@ -75,12 +78,14 @@ public class danlop implements danlopConstants {
     case SEMICOLON:
       t = jj_consume_token(SEMICOLON);
       return new TerminalPair(TerminalToken.SEMICOLON, t.image);
+    /*
     case OPEN_PAREN:
       t = jj_consume_token(OPEN_PAREN);
       return new TerminalPair(TerminalToken.OPEN_PAREN, t.image);
     case CLOSE_PAREN:
       t = jj_consume_token(CLOSE_PAREN);
       return new TerminalPair(TerminalToken.CLOSE_PAREN, t.image);
+    */
     case OPERATOR:
       t = jj_consume_token(OPERATOR);
       return new TerminalPair(TerminalToken.OPERATOR, t.image);

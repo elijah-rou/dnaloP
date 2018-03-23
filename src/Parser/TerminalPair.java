@@ -24,6 +24,6 @@ public class TerminalPair {
     }
 
     public String toString(){
-        return "<"+this.token+", "+value+">"+value+">";
+        return "<"+this.token+", "+value+">";
     }
 }

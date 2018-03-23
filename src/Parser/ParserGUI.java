@@ -87,6 +87,10 @@ public class ParserGUI extends JFrame {
 
     ParserGUI() {
         super("Parser");
+        // TEST
+        for(TerminalPair t : terminals){
+          System.out.println(t.toString());
+        }
         Parser parser = new Parser(terminals);
         mxGraph g = generateGraph(parser.getParseTree());
         mxGraphComponent graphComponent = new mxGraphComponent(g);

@@ -64,6 +64,7 @@ public class ParserGUI extends JFrame {
           System.out.println(t.toString());
         }
         Parser parser = new Parser(terminals);
+        //generateStack();
         mxGraph g = generateGraph(parser.getParseTree());
         mxGraphComponent graphComponent = new mxGraphComponent(g);
         getContentPane().add(graphComponent);
@@ -100,4 +101,35 @@ public class ParserGUI extends JFrame {
         layout.execute(g.getDefaultParent());
         return g;
     }
+
+    // Courtesy of Dan
+    /*
+    public void generateStack(ArrayList<TerminalPair> terms){
+        mxGraph s = new mxGraph();
+        mxGraphComponent graphComponent = new mxGraphComponent(s);
+        getContentPane().add(graphComponent);
+        s.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_DASHED, true);
+        s.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_FONTCOLOR, "#ff0000");
+        s.getModel().beginUpdate();
+        try{
+            Object vRoot= s.insertVertex(s.getDefaultParent(),null, terms.get(0).value ,0,0,30);
+            Object vParent = vRoot;
+            Object vChild;
+            for (int i =0;i < terms.size(); i++ ) {
+                System.out.println(terms.get(i).value);
+                child=s.insertVertex(s.getDefaultParent( null, terms.get(i).value,0,0,30,30));
+                s.insertEdge(s.getDefaultParent(), null, Integer.toString(i) ,vParent ,vChild);
+                vParent=vchild;
+            }
+        }
+        finally {
+                s.getModel().endUpdate();
+        } 
+        }
+        
+        mxCompactTreeLayout layout = new mxCompactTreeLayout(s);
+        layout.setHorizontal(false);
+        layout.execute(s.getDefaultParent()); 
+    } 
+    */
 }

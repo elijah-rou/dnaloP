@@ -1,4 +1,5 @@
 import java.util.Stack;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 /**
@@ -21,15 +22,15 @@ public class Parser {
     }
 
     private void advance() {
-        i--;
+
+        if (i > 0) { i--; }
     }
 
     private void consume(TerminalToken t, NonTerminalNode n) {
         //System.out.println(i+ " - " +input.get(i).token + " | " + t); 
         if (input.get(i).token == t) {
             n.addChild(new TerminalNode(input.get(i)));
-            if (i > 0)
-                advance();
+            advance();
         }
         else
             System.out.println("Error on token " + i);
@@ -50,7 +51,7 @@ public class Parser {
             */
         }
         else{
-            //return error("Expected ");
+            error(n.nt, TerminalToken.EOF);
         }
 
         return n;
@@ -65,7 +66,7 @@ public class Parser {
             n.addChild(body2());
         }
         else{
-            // return error
+            error(n.nt, TerminalToken.CLOSE_CURLY);
         }
         return n;
     }
@@ -84,7 +85,7 @@ public class Parser {
             consume(TerminalToken.OPEN_CURLY,n);
         }
         else{
-            // error
+            error(n.nt, TerminalToken.SEMICOLON, TerminalToken.OPEN_CURLY);
         }
         return n;
     }
@@ -112,7 +113,7 @@ public class Parser {
             n.addChild(expr());
         }
         else{
-            //error();
+            error(n.nt, TerminalToken.ASSIGN, TerminalToken.IF, TerminalToken.WHILE);
         }
         return n;
     }
@@ -135,14 +136,23 @@ public class Parser {
             consume(TerminalToken.LITERAL,n);
         }
         else{ 
-            //error();
+            error(n.nt, TerminalToken.OPERATOR, TerminalToken.IDENTIFIER, TerminalToken.LITERAL);
         }
         return n;
     }
 
-    private TerminalNode error(String message) {
-        System.out.println("Error on token " + i + '\n' + message);
-        return new TerminalNode(new TerminalPair(TerminalToken.ERROR, "ERROR"));
+    private void error(NonTerminal n, int prod, TerminalToken... expectedTokens) {
+        System.out.println(String.format("Error on token %d while attempting to apply production %d to non-terminal" +
+                        " %s\nExpected token(s): %s\nActual token: %s",
+                        i, prod, n, Arrays.toString(expectedTokens), input.get(i)));
+        advance();
+    }
+
+    private void error(NonTerminal n, TerminalToken... expectedTokens) {
+        System.out.println(String.format("Error on token %d while attempting to find a production to apply to non-terminal" +
+                        " %s\nExpected token(s): %s\nActual token: %s",
+                i, n, Arrays.toString(expectedTokens), input.get(i)));
+        advance();
     }
 }
 

@@ -1,1 +1,1 @@
-a true == { 5 4 + } if
+{a true == { 5 a = ;} {4 b =;} if;}

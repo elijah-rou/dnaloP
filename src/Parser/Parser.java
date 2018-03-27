@@ -33,7 +33,7 @@ public class Parser {
             advance();
         }
         else
-            System.out.println("Error on token " + i);
+            error(n.nt, t);
     }
 
     private NonTerminalNode S() {

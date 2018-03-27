@@ -38,22 +38,23 @@ public class Parser {
 
     private NonTerminalNode S() {
         NonTerminalNode n = new NonTerminalNode(NonTerminal.S);
-        TerminalToken t = input.get(i).token;
-        if(t == TerminalToken.EOF){
-            n.setProduction(1);
-            consume(TerminalToken.EOF,n);
-            n.addChild(body1());
-            consume(TerminalToken.BOF,n);
+        if (!input.isEmpty()) { //in the event of a lexical error
+            TerminalToken t = input.get(i).token;
+            if(t == TerminalToken.EOF){
+                n.setProduction(1);
+                consume(TerminalToken.EOF,n);
+                n.addChild(body1());
+                consume(TerminalToken.BOF,n);
             /*
             if (i != 0)
                 //error
             break;
             */
+            }
+            else{
+                error(n.nt, TerminalToken.EOF);
+            }
         }
-        else{
-            error(n.nt, TerminalToken.EOF);
-        }
-
         return n;
     }
 

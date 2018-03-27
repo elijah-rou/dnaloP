@@ -76,7 +76,7 @@ public class ParserGUI extends JFrame {
         ParseNode child;
         for (int j = n.getChildren().size()-1; j>=0 ; j--) {
             child = n.getChildren().get(j);
-            vChild = g.insertVertex(g.getDefaultParent(), null, child.getName(),0,0,30,30);
+            vChild = g.insertVertex(g.getDefaultParent(), null, child.getName(),0,0,100,30);
             g.insertEdge(g.getDefaultParent(), null,Integer.toString(n.production),vParent ,vChild);
             if (child instanceof NonTerminalNode) {
                 generateGraph(g, vChild, (NonTerminalNode) child);
@@ -91,7 +91,7 @@ public class ParserGUI extends JFrame {
         g.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_FONTCOLOR, "#ff0000");
         g.getModel().beginUpdate();
         try {
-            Object vRoot = g.insertVertex(g.getDefaultParent(), null, n.nt.name(),0,0,30,30);
+            Object vRoot = g.insertVertex(g.getDefaultParent(), null, n.nt.name(),0,0,100,30);
             generateGraph(g, vRoot, n);
         } finally {
             g.getModel().endUpdate();
